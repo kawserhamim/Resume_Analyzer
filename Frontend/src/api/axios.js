@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: ['https://resume-analyzer-yzft.onrender.com'],
+  baseURL: 'https://resume-analyzer-yzft.onrender.com',
 });
 
 // Attach token to every request
