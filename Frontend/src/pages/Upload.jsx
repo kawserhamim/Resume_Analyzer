@@ -6,10 +6,21 @@ import { Upload, FileText, Briefcase, AlertCircle, CheckCircle, Loader2, X } fro
 function FileDropzone({ label, name, icon: Icon, accept, file, onChange, onClear }) {
   const inputRef = useRef();
 
+  const isAccepted = (f) => {
+    if (!f) return false;
+    if (accept === '.pdf') return f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf');
+    return true;
+  };
+
   const handleDrop = (e) => {
     e.preventDefault();
     const dropped = e.dataTransfer.files[0];
-    if (dropped) onChange({ target: { name, files: [dropped] } });
+    if (!dropped) return;
+    if (!isAccepted(dropped)) {
+      onChange({ target: { name, files: [], invalid: `${label} must be a PDF file.` } });
+      return;
+    }
+    onChange({ target: { name, files: [dropped] } });
   };
 
   return (
@@ -46,6 +57,7 @@ function FileDropzone({ label, name, icon: Icon, accept, file, onChange, onClear
             accept={accept}
             onChange={onChange}
             className="hidden"
+            onClick={(e) => { e.target.value = null; }}
           />
         </div>
       )}
@@ -62,7 +74,13 @@ export default function UploadPage() {
   const [success, setSuccess] = useState('');
 
   const handleFile = (e) => {
-    const { name, files } = e.target;
+    const { name, files, invalid } = e.target;
+    if (invalid) {
+      setError(invalid);
+      if (name === 'resume') setResume(null);
+      if (name === 'jd') setJd(null);
+      return;
+    }
     if (name === 'resume') setResume(files[0] || null);
     if (name === 'jd') setJd(files[0] || null);
     setError('');
@@ -72,6 +90,16 @@ export default function UploadPage() {
     e.preventDefault();
     if (!resume || !jd) {
       setError('Please upload both the resume and job description files.');
+      return;
+    }
+    if (resume.type !== 'application/pdf' && !resume.name.toLowerCase().endsWith('.pdf')) {
+      setError('Resume must be a PDF file.');
+      setResume(null);
+      return;
+    }
+    if (jd.type !== 'application/pdf' && !jd.name.toLowerCase().endsWith('.pdf')) {
+      setError('Job description must be a PDF file.');
+      setJd(null);
       return;
     }
 
@@ -127,7 +155,7 @@ export default function UploadPage() {
               label="Resume"
               name="resume"
               icon={FileText}
-              accept=".pdf,.doc,.docx"
+              accept=".pdf,application/pdf"
               file={resume}
               onChange={handleFile}
               onClear={() => setResume(null)}
@@ -136,7 +164,7 @@ export default function UploadPage() {
               label="Job Description"
               name="jd"
               icon={Briefcase}
-              accept=".pdf"
+              accept=".pdf,application/pdf"
               file={jd}
               onChange={handleFile}
               onClear={() => setJd(null)}
@@ -163,7 +191,7 @@ export default function UploadPage() {
 
           {/* Info note */}
           <p className="text-xs text-gray-400 mt-4 text-center">
-            Supported formats: PDF · Max file size: 10MB
+            Only PDF files are accepted · Max file size: 10MB
           </p>
         </div>
 
