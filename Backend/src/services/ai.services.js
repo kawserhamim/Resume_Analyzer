@@ -202,6 +202,11 @@ Answer:
 behavioralQuestions
 ━━━━━━━━━━
 
+A behavioral question is an interview question that requires 
+candidates to describe specific past experiences to demonstrate 
+how they have handled situations relevant to the job.
+It is based on the principle that past behavior is a good predictor of future performa
+
 Generate behavioral interview questions using ONLY:
 
 • Resume projects
