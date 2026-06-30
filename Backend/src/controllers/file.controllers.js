@@ -79,8 +79,7 @@ export const uploadFiles = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Server error",
-      error: err.message,
+      message: err.message,
     });
   }
 };
