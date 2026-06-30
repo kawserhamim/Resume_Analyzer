@@ -11,8 +11,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(cors({ origin: ['https://resume-analyzer-frontend-vhv6.onrender.com', 
-  'http://localhost:5173', 'http://localhost:5174'],
+app.use(cors({ origin: 'https://resume-analyzer-frontend-vhv6.onrender.com' , 
    credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,7 +24,7 @@ app.use("/files", fileRoutes);
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Server is running..yes...",
+    message: "Server Is running..yes...",
   });
 });
 
