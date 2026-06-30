@@ -38,7 +38,7 @@ function FileDropzone({ label, name, icon: Icon, accept, file, onChange, onClear
           <p className="text-sm text-gray-500 group-hover:text-blue-600 transition-colors font-medium">
             Click or drag &amp; drop
           </p>
-          <p className="text-xs text-gray-400">PDF, DOC, DOCX</p>
+          <p className="text-xs text-gray-400">PDF ONLY</p>
           <input
             ref={inputRef}
             type="file"
@@ -136,7 +136,7 @@ export default function UploadPage() {
               label="Job Description"
               name="jd"
               icon={Briefcase}
-              accept=".pdf,.doc,.docx"
+              accept=".pdf"
               file={jd}
               onChange={handleFile}
               onClear={() => setJd(null)}
@@ -163,7 +163,7 @@ export default function UploadPage() {
 
           {/* Info note */}
           <p className="text-xs text-gray-400 mt-4 text-center">
-            Supported formats: PDF, DOC, DOCX · Max file size: 10MB
+            Supported formats: PDF · Max file size: 10MB
           </p>
         </div>
 

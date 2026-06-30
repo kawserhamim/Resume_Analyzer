@@ -202,24 +202,17 @@ Answer:
 behavioralQuestions
 ━━━━━━━━━━
 
-A behavioral question is an interview question that requires 
-candidates to describe specific past experiences to demonstrate 
-how they have handled situations relevant to the job.
-It is based on the principle that past behavior is a good predictor of future performa
+A behavioral interview question asks the candidate to describe a SPECIFIC PAST SITUATION
+to demonstrate how they handled work relevant to the target role.
 
-Generate behavioral interview questions using ONLY:
+Definition to apply:
+"Past behavior is the best predictor of future performance."
 
-• Resume projects
+You MUST generate this field. It MUST be a NON-EMPTY array of objects.
 
-• Resume experience
+Generate EXACTLY 7 questions (never less, never more).
 
-• Resume responsibilities
-
-• Job Description responsibilities
-
-Purpose:
-
-Evaluate:
+Each question MUST evaluate one of these competencies:
 
 • teamwork
 
@@ -239,50 +232,55 @@ Evaluate:
 
 • problem solving
 
+Build questions from ONLY these sources:
+
+• Resume projects (name, description, technologies, outcomes)
+
+• Resume work experience (roles, responsibilities, achievements)
+
+• Resume extracurricular / hackathon / open-source items
+
+• Job Description responsibilities and required soft skills
+
 Rules:
 
-1. Generate between 5 and 10 questions.
+1. If the Resume lists any project, at least 3 of the 7 questions must be anchored
+   to a concrete project from the Resume (mention the project name in the question).
 
-2. If Resume contains projects, ask project-related behavioral questions.
+2. If the Resume lacks experience, generate general behavioral questions that are
+   still clearly relevant to the Job Description.
 
-3. If Resume lacks experience, generate general behavioral questions relevant to the Job Description.
+3. NEVER invent a candidate experience that is not in the Resume.
 
-4. Never invent candidate experiences.
+4. Every question MUST be phrased in STAR style:
+   Situation / Task / Action / Result.
 
-5. Every question must contain:
+5. Every item MUST be an object with EXACTLY these three string fields:
+
+   {
+     "question": "...",
+     "intention": "...",
+     "answer": "..."
+   }
+
+Rules for the "answer" field:
+
+• The answer is a SAMPLE interview response to demonstrate what a strong answer looks like.
+
+• If the Resume contains relevant evidence, base the sample answer on that evidence.
+
+• If the Resume does NOT contain enough evidence, write a generic but realistic sample
+  answer using the STAR method. Do NOT say "NOT_FOUND".
+
+• The answer MUST be at least 2 sentences and MUST never be empty.
+
+Example item (structure only — adapt to the actual resume):
 
 {
-"question":"",
-"intention":"",
-"answer":""
+  "question": "Tell me about a challenge you faced while building your Real-Time Chat Application and how you resolved it.",
+  "intention": "Evaluate problem solving, ownership, and debugging skills.",
+  "answer": "In a sample response, the candidate would describe the specific synchronization bug between connected users, the debugging steps taken, how socket events were restructured, and the measurable improvement in message delivery reliability."
 }
-
-Rules for answer:
-
-If Resume provides evidence:
-
-Use Resume information.
-
-Otherwise:
-
-Provide a strong sample interview answer based on interview best practices.
-
-Never say:
-
-NOT_FOUND
-
-Never leave answer empty.
-
-Good Example:
-
-Question:
-"Tell me about a challenge you faced while building your Real-Time Chat Application."
-
-Intention:
-"Evaluate problem solving and ownership."
-
-Answer:
-"One possible challenge was maintaining synchronization between multiple connected users. A structured approach would involve debugging event flow, improving socket communication, and testing edge cases until updates became reliable."
 
 ━━━━━━━━━━
 skillGaps
@@ -369,53 +367,33 @@ Do NOT include topics unrelated to the Job Description.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 REQUIRED OUTPUT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-you have to generate the output in the exact format as specified above. 
+You MUST return ONLY this exact JSON object.
 Do not include any additional text, explanations, or markdown.
-dont exclude any required fields.
-
-
-Return ONLY this JSON object.
+Do not exclude any required fields.
+The "behavioralQuestions" array MUST contain EXACTLY 7 objects.
 
 {
-"name":"",
-
-"title":"",
-
-"resume":"",
-
-"matchScore":0,
-
-"candidate_introduction":"",
-
-"technicalQuestions":[
-{
-"question":"",
-"intention":"",
-"answer":""
-}
-],
-
-"behavioralQuestions":[  (must be between 3 and 5 questions)
-{
-"question":"",
-"intention":"",
-"answer":""
-}
-],
-
-"skillGaps":[
-""
-],
-
-"preparationPlan":[
-{
-"day":1,
-"focus":"",
-"tasks":[
-""
-]
-}
-]
+  "name": "",
+  "title": "",
+  "resume": "",
+  "matchScore": 0,
+  "candidate_introduction": "",
+  "technicalQuestions": [
+    { "question": "", "intention": "", "answer": "" }
+  ],
+  "behavioralQuestions": [
+    { "question": "", "intention": "", "answer": "" },
+    { "question": "", "intention": "", "answer": "" },
+    { "question": "", "intention": "", "answer": "" },
+    { "question": "", "intention": "", "answer": "" },
+    { "question": "", "intention": "", "answer": "" },
+    { "question": "", "intention": "", "answer": "" },
+    { "question": "", "intention": "", "answer": "" }
+  ],
+  "skillGaps": [ "" ],
+  "preparationPlan": [
+    { "day": 1, "focus": "", "tasks": [ "" ] }
+  ]
 }
 
 

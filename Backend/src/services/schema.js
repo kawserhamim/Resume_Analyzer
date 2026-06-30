@@ -22,6 +22,14 @@ export const interviewReportSchema = z.object({
         })
     ),
 
+    behavioralQuestions: z.array(
+        z.object({
+            question: z.string().min(10),
+            intention: z.string().min(5),
+            answer: z.string().min(20),
+        })
+    ),
+
     skillGaps: z.array(z.string()),
 
     preparationPlan: z.array(
@@ -76,6 +84,22 @@ export const interviewReportGeminiSchema = {
             },
         },
 
+        behavioralQuestions: {
+            type: "array",
+            minItems: 5,
+            maxItems: 10,
+            items: {
+                type: "object",
+                properties: {
+                    question: { type: "string" },
+                    intention: { type: "string" },
+                    answer: { type: "string" },
+                },
+                required: ["question", "intention", "answer"],
+                additionalProperties: false,
+            },
+        },
+
         skillGaps: {
             type: "array",
             items: {
@@ -108,6 +132,7 @@ export const interviewReportGeminiSchema = {
         "matchScore",
         "candidate_introduction",
         "technicalQuestions",
+        "behavioralQuestions",
         "skillGaps",
         "preparationPlan",
     ],
