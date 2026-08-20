@@ -25,7 +25,7 @@ export default function Login() {
       login(res.data.token);
       navigate('/upload');
     } catch (err) {
-      setError(err.response?.data?.msg || 'Login failed. Please try again.');
+      setError(err.response?.data?.message || err.response?.data?.msg || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }

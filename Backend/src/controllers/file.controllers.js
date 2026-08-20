@@ -21,28 +21,22 @@ export const uploadFiles = async (req, res) => {
     resumePath = resumeFile.path;
     jdPath = jdFile.path;
 
-    // 🔐 File type validation
-    const allowedTypes = [
+    // 🔐 File type double-check (multer fileFilter is first gate; this is second)
+    const allowedTypes = new Set([
       "application/pdf",
       "application/msword",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
+    ]);
 
-    if (!allowedTypes.includes(resumeFile.mimetype)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid resume file type",
-      });
+    if (!allowedTypes.has(resumeFile.mimetype)) {
+      return res.status(400).json({ success: false, message: "Invalid resume file type" });
     }
 
-    if (!allowedTypes.includes(jdFile.mimetype)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid JD file type",
-      });
+    if (!allowedTypes.has(jdFile.mimetype)) {
+      return res.status(400).json({ success: false, message: "Invalid JD file type" });
     }
 
-    // ⚡ Faster processing
+    // ⚡ Extract text in parallel
     const [resumeText, jobText] = await Promise.all([
       extractText(resumePath),
       extractText(jdPath),
@@ -55,13 +49,13 @@ export const uploadFiles = async (req, res) => {
       throw new Error("Invalid AI response");
     }
 
-    // 💾 Save to DB
+    // 💾 Save to DB — req.user.userId is guaranteed by authMiddleware
     const savedReport = await InterviewReport.create({
       ...report,
-      createdBy: req.user?.userId || null,
+      createdBy: req.user.userId,
     });
 
-    // 🧹 Cleanup files
+    // 🧹 Cleanup uploaded files
     await deleteFile(resumePath);
     await deleteFile(jdPath);
 
@@ -70,33 +64,27 @@ export const uploadFiles = async (req, res) => {
       message: "Report generated successfully",
       data: savedReport,
     });
-
   } catch (err) {
     console.error("Upload error:", err);
 
     if (resumePath) await deleteFile(resumePath).catch(() => {});
     if (jdPath) await deleteFile(jdPath).catch(() => {});
 
+    // Never leak internal error message to client
     return res.status(500).json({
       success: false,
-      message: err.message,
+      message: "Failed to generate report. Please try again.",
     });
   }
 };
 
 export const getAllReports = async (req, res) => {
   try {
-    const reports = await InterviewReport.find({ createdBy: req.user?.userId || null });
-    return res.status(200).json({
-      success: true,
-      data: reports,
-    });
+    // req.user.userId is guaranteed by authMiddleware — no null fallback needed
+    const reports = await InterviewReport.find({ createdBy: req.user.userId });
+    return res.status(200).json({ success: true, data: reports });
   } catch (err) {
     console.error("Fetch reports error:", err);
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-      error: err.message,
-    });
+    return res.status(500).json({ success: false, message: "Failed to fetch reports" });
   }
 };
